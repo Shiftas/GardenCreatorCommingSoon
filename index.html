@@ -126,10 +126,11 @@
 
         .garden-grid {
             display: grid;
-            grid-template-columns: repeat(7, 60px);
-            grid-template-rows: repeat(7, 60px);
+            grid-template-columns: repeat(var(--cols, 7), 60px);
+            grid-template-rows: repeat(var(--rows, 7), 60px);
             gap: 12px;
             margin: 0 auto;
+            transition: all 0.3s ease;
         }
 
         .tile {
@@ -271,10 +272,11 @@
         }
 
         @media (max-width: 1000px) {
-            .main-layout { flex-direction: column; overflow-y: auto; }
-            .sidebar { width: 100%; padding: 2rem; text-align: center; align-items: center; }
-            .game-section { padding: 2rem; min-height: 600px; }
-            body { overflow: auto; }
+            .main-layout { flex-direction: column; height: auto; min-height: 100vh; overflow-y: visible; }
+            .sidebar { width: 100%; padding: 2rem; text-align: center; align-items: center; z-index: 5; }
+            .game-section { padding: 1rem; min-height: auto; flex: none; }
+            .garden-container { padding: 1.5rem; width: 100%; max-width: 600px; margin: 0 auto; }
+            body { overflow: auto; height: auto; }
         }
     </style>
 </head>
@@ -353,34 +355,63 @@
         const levels = ['Seedsman', 'Apprentice', 'Gardener', 'Master', 'Zen Sage', 'Nature Deity'];
 
         // Init Grid
-        for (let i = 0; i < 49; i++) {
-            const tile = document.createElement('div');
-            tile.className = 'tile';
-            tile.dataset.state = 'empty';
-            tile.dataset.timer = '0';
-            tile.dataset.maxTimer = '0';
-            tile.dataset.effortNeeded = '0';
-            tile.dataset.effortDone = '0';
-            tile.dataset.isDelayed = 'false';
+        function initGrid(cols, rows) {
+            grid.innerHTML = '';
+            grid.style.setProperty('--cols', cols);
+            grid.style.setProperty('--rows', rows);
             
-            const bar = document.createElement('div');
-            bar.className = 'timer-bar';
-            const fill = document.createElement('div');
-            fill.className = 'timer-fill';
-            bar.appendChild(fill);
-            tile.appendChild(bar);
+            for (let i = 0; i < cols * rows; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.dataset.state = 'empty';
+                tile.dataset.timer = '0';
+                tile.dataset.maxTimer = '0';
+                tile.dataset.effortNeeded = '0';
+                tile.dataset.effortDone = '0';
+                tile.dataset.isDelayed = 'false';
+                
+                const bar = document.createElement('div');
+                bar.className = 'timer-bar';
+                const fill = document.createElement('div');
+                fill.className = 'timer-fill';
+                bar.appendChild(fill);
+                tile.appendChild(bar);
 
-            const emoji = document.createElement('div');
-            emoji.className = 'emoji-slot';
-            tile.appendChild(emoji);
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-slot';
+                tile.appendChild(emoji);
 
-            const effort = document.createElement('div');
-            effort.className = 'effort-indicator';
-            tile.appendChild(effort);
-            
-            tile.addEventListener('click', () => handleTileClick(tile));
-            grid.appendChild(tile);
+                const effort = document.createElement('div');
+                effort.className = 'effort-indicator';
+                tile.appendChild(effort);
+                
+                tile.addEventListener('click', () => handleTileClick(tile));
+                grid.appendChild(tile);
+            }
         }
+
+        function updateGridSize() {
+            const container = document.querySelector('.garden-container');
+            const availableWidth = container.clientWidth - 80; // approximate padding and safety
+            const availableHeight = window.innerHeight - 350; // approximate header/controls height
+            
+            let cols = Math.floor((availableWidth + 12) / 72);
+            let rows = Math.floor((availableHeight + 12) / 72);
+            
+            // Limit to original 7x7 for desktop view or if lots of space
+            cols = Math.max(3, Math.min(cols, 7));
+            rows = Math.max(3, Math.min(rows, 7));
+            
+            // Re-init only if dimensions changed significantly to avoid resetting mid-game
+            if (grid.dataset.cols != cols || grid.dataset.rows != rows) {
+                grid.dataset.cols = cols;
+                grid.dataset.rows = rows;
+                initGrid(cols, rows);
+            }
+        }
+
+        window.addEventListener('resize', updateGridSize);
+        updateGridSize(); // Initial call
 
         function setTool(tool) {
             currentTool = tool;
