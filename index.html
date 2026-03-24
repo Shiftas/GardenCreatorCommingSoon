@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garden Creator | Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d5a27;
+            --primary-light: #4a7c44;
+            --accent: #8fb924;
+            --bg: #0b120a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #e8f5e9;
+            --text-dim: #a5d6a7;
+            --danger: #ef4444;
+            --water: #3b82f6;
+            --harvest: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(45, 90, 39, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(143, 185, 36, 0.1) 0%, transparent 40%);
+        }
+
+        .main-layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sidebar info */
+        .sidebar {
+            width: 500px;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(to right, rgba(0,0,0,0.4), transparent);
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            max-width: 420px;
+        }
+
+        /* Game Area */
+        .game-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .garden-container {
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 2.5rem;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            animation: float 6s ease-in-out infinite;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .garden-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 0.5rem;
+        }
+
+        .garden-header .stat-group {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .garden-header .stat-item {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .garden-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 60px);
+            grid-template-rows: repeat(7, 60px);
+            gap: 12px;
+            margin: 0 auto;
+        }
+
+        .tile {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .tile:hover {
+            background: rgba(143, 185, 36, 0.1);
+            border-color: rgba(143, 185, 36, 0.3);
+            transform: scale(1.05);
+        }
+
+        .tile.planted { background: rgba(45, 90, 39, 0.2); }
+        .tile.dead { background: rgba(239, 68, 68, 0.1) !important; filter: grayscale(1); }
+
+        .effort-indicator {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 2px;
+            font-weight: 700;
+        }
+
+        .timer-bar {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            right: 4px;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .timer-fill {
+            height: 100%;
+            width: 100%;
+            background: var(--accent);
+            transition: width 0.5s linear;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .game-controls-secondary {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            color: var(--text);
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        .stat-value {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .stat-value.timer { 
+            color: var(--harvest); 
+            font-family: monospace;
+            font-size: 1.3rem;
+        }
+        .timer-critical { color: var(--danger) !important; animation: pulse 1s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Overlays */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 32px;
+            padding: 2rem;
+        }
+
+        .overlay h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        #game-over h2 { color: var(--danger); }
+        #start-screen h2 { color: var(--accent); }
+
+        /* Animations */
+        @keyframes fadeOutUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-30px); }
+        }
+
+        @media (max-width: 1000px) {
+            .main-layout { flex-direction: column; overflow-y: auto; }
+            .sidebar { width: 100%; padding: 2rem; text-align: center; align-items: center; }
+            .game-section { padding: 2rem; min-height: 600px; }
+            body { overflow: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h1>Garden Creator</h1>
+            <p>Garden Creator is an immersive VR design tool that turns "What if?" into "Right here." 
+                Walk through your designs, experiment with endless layouts, and visualize your perfect outdoor escape before you ever pick up a shovel.</p>
+            <p>Coming soon to Meta Quest.</p>
+            <footer>
+                <small>&copy; 2026 Garden Creator. All rights reserved.</small>
+            </footer>
+        </aside>
+
+        <section class="game-section">
+            <div class="garden-container">
+                <!-- Start Screen -->
+                <div id="start-screen" class="overlay">
+                    <h2>Your Zen Space</h2>
+                    <p style="margin-bottom: 2rem;">Cultivate life, maintain harmony, and let time thrive.</p>
+                    <button class="btn" onclick="startGame()" style="padding: 1.2rem 2.5rem; font-size: 1.2rem; background: var(--accent); color: var(--bg);">Begin Journey</button>
+                </div>
+
+                <!-- Game Over -->
+                <div id="game-over" class="overlay" style="display: none;">
+                    <h2>Nature Reclaims All</h2>
+                    <p>Time has withered your efforts. The Cycle continues.</p>
+                    <div id="final-stats" style="margin-top: 1rem; color: var(--text-dim);">Points: <span id="final-points">0</span></div>
+                    <button class="btn" onclick="location.reload()" style="margin-top: 2rem; padding: 1rem 2rem; font-size: 1.2rem;">✨ Rebirth</button>
+                </div>
+
+                <div class="garden-header">
+                    <div class="stat-group">
+                        <div class="stat-item">Time <span id="global-timer" class="stat-value timer">300.0</span></div>
+                        <div class="stat-item">Points <span id="points-count" class="stat-value">0</span></div>
+                    </div>
+                    <div class="stat-item" style="text-align: right;">Level <span id="zen-level" class="stat-value">Seedsman</span></div>
+                </div>
+                
+                <div class="garden-grid" id="garden-grid">
+                    <!-- 49 Tiles -->
+                </div>
+                
+                <div class="game-controls-container">
+                    <div class="game-controls">
+                        <button class="btn active" id="tool-seed" onclick="setTool('seed')">🌱 Plant</button>
+                        <button class="btn" id="tool-water" onclick="setTool('water')">💧 Water</button>
+                        <button class="btn" id="tool-fertilize" onclick="setTool('fertilize')">✨ Fertilizer</button>
+                        <button class="btn" id="tool-harvest" onclick="setTool('harvest')">🧺 Harvest</button>
+                    </div>
+                    <div class="game-controls-secondary">
+                        <button class="btn" id="tool-clear" onclick="clearGarden()" style="width: 100%; justify-content: center; opacity: 0.7;">🧹 Clear Withered Plants</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const grid = document.getElementById('garden-grid');
+        const pointsEl = document.getElementById('points-count');
+        const timerEl = document.getElementById('global-timer');
+        const zenLevelEl = document.getElementById('zen-level');
+        const gameOverEl = document.getElementById('game-over');
+        const startScreenEl = document.getElementById('start-screen');
+        
+        let currentTool = 'seed';
+        let points = 0;
+        let globalTime = 300.0;
+        let isStarted = false;
+        let isGameOver = false;
+        
+        const plants = ['🌿', '🌸', '🌵', '🌻', '🍃', '🍀', '🌷', '🍄'];
+        const trees = ['🌳', '🌲', '🌴', '🎋', '🌲'];
+        const levels = ['Seedsman', 'Apprentice', 'Gardener', 'Master', 'Zen Sage', 'Nature Deity'];
+
+        // Init Grid
+        for (let i = 0; i < 49; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.dataset.state = 'empty';
+            tile.dataset.timer = '0';
+            tile.dataset.maxTimer = '0';
+            tile.dataset.effortNeeded = '0';
+            tile.dataset.effortDone = '0';
+            tile.dataset.isDelayed = 'false';
+            
+            const bar = document.createElement('div');
+            bar.className = 'timer-bar';
+            const fill = document.createElement('div');
+            fill.className = 'timer-fill';
+            bar.appendChild(fill);
+            tile.appendChild(bar);
+
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji-slot';
+            tile.appendChild(emoji);
+
+            const effort = document.createElement('div');
+            effort.className = 'effort-indicator';
+            tile.appendChild(effort);
+            
+            tile.addEventListener('click', () => handleTileClick(tile));
+            grid.appendChild(tile);
+        }
+
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tool-${tool}`).classList.add('active');
+        }
+
+        function startGame() {
+            isStarted = true;
+            startScreenEl.style.display = 'none';
+        }
+
+        function handleTileClick(tile) {
+            if (!isStarted || isGameOver || tile.dataset.isDelayed === 'true') return;
+
+            if (currentTool === 'seed' && tile.dataset.state === 'empty') {
+                tile.dataset.state = 'seed';
+                tile.querySelector('.emoji-slot').innerText = '⏺️';
+                tile.classList.add('planted');
+                setupNextStage(tile, 'water');
+                playEffect(tile, '✨');
+            } else if (currentTool === 'water' && tile.dataset.timerType === 'water') {
+                handleInteraction(tile, () => {
+                    if (tile.dataset.state === 'seed') {
+                        tile.dataset.state = 'sprout';
+                        tile.querySelector('.emoji-slot').innerText = '🌱';
+                        setupNextStage(tile, 'water');
+                    } else if (tile.dataset.state === 'sprout') {
+                        tile.dataset.state = 'plant';
+                        tile.querySelector('.emoji-slot').innerText = plants[Math.floor(Math.random() * plants.length)];
+                        setupNextStage(tile, 'fertilize');
+                    }
+                });
+                playEffect(tile, '💧');
+            } else if (currentTool === 'fertilize' && tile.dataset.timerType === 'fertilize') {
+                handleInteraction(tile, () => {
+                    tile.dataset.state = 'tree';
+                    tile.querySelector('.emoji-slot').innerText = trees[Math.floor(Math.random() * trees.length)];
+                    tile.style.fontSize = '2rem';
+                    setupNextStage(tile, 'harvest');
+                    playEffect(tile, '🌟');
+                });
+            } else if (currentTool === 'harvest' && tile.dataset.state === 'tree') {
+                points += 10;
+                globalTime = Math.min(globalTime + 2, 999);
+                resetTile(tile);
+                updateStats();
+                playEffect(tile, '💰');
+            } else if (currentTool === 'clear' && tile.dataset.state === 'dead') {
+                resetTile(tile);
+            }
+        }
+
+        function handleInteraction(tile, onComplete) {
+            let done = parseInt(tile.dataset.effortDone) + 1;
+            let needed = parseInt(tile.dataset.effortNeeded);
+            tile.dataset.effortDone = done;
+            
+            // Interaction Reset: Reset timer on every care action
+            tile.dataset.timer = tile.dataset.maxTimer;
+            
+            if (done >= needed) {
+                onComplete();
+            } else {
+                // Growth delay
+                const delay = Math.floor(Math.random() * 3) + 1; // 1-3s
+                tile.dataset.isDelayed = 'true';
+                tile.querySelector('.timer-bar').style.display = 'none';
+                tile.querySelector('.effort-indicator').innerText = 'GROWING...';
+                tile.querySelector('.effort-indicator').style.color = 'var(--text-dim)';
+                
+                setTimeout(() => {
+                    if (tile.dataset.state !== 'empty' && tile.dataset.state !== 'dead') {
+                        tile.dataset.isDelayed = 'false';
+                        tile.querySelector('.timer-bar').style.display = 'block';
+                        updateEffortDisplay(tile);
+                    }
+                }, delay * 1000);
+            }
+        }
+
+        function setupNextStage(tile, type) {
+            const timeout = Math.floor(Math.random() * 16) + 10; // 10-25s
+            const interactionType = (type === 'harvest') ? 1 : (Math.floor(Math.random() * 3) + 1); // 1-3 interactions
+            
+            tile.dataset.timer = timeout;
+            tile.dataset.maxTimer = timeout;
+            tile.dataset.timerType = type;
+            tile.dataset.effortNeeded = interactionType;
+            tile.dataset.effortDone = 0;
+            
+            const bar = tile.querySelector('.timer-bar');
+            const fill = tile.querySelector('.timer-fill');
+            bar.style.display = 'block';
+            
+            const colors = { water: 'var(--water)', fertilize: 'var(--accent)', harvest: 'var(--harvest)' };
+            fill.style.background = colors[type];
+            fill.style.width = '100%';
+            
+            updateEffortDisplay(tile);
+        }
+
+        function updateEffortDisplay(tile) {
+            const needed = parseInt(tile.dataset.effortNeeded);
+            const done = parseInt(tile.dataset.effortDone);
+            const indicator = tile.querySelector('.effort-indicator');
+            indicator.style.color = 'var(--text-dim)';
+            
+            if (needed > 1 && tile.dataset.state !== 'tree') {
+                const label = (tile.dataset.timerType === 'water') ? '💧' : '✨';
+                indicator.innerText = `${label} ${done}/${needed}`;
+            } else if (tile.dataset.state === 'tree') {
+                indicator.innerText = '🧺 READY';
+                indicator.style.color = 'var(--harvest)';
+            } else {
+                indicator.innerText = '';
+            }
+        }
+
+        // Ticker
+        setInterval(() => {
+            if (!isStarted || isGameOver) return;
+            
+            // Global Clock
+            globalTime -= 0.1;
+            if (globalTime <= 0) triggerGameOver();
+            updateStats();
+
+            // Local Timers
+            document.querySelectorAll('.tile').forEach(tile => {
+                if (tile.dataset.state !== 'empty' && tile.dataset.state !== 'dead' && tile.dataset.isDelayed === 'false') {
+                    let time = parseFloat(tile.dataset.timer);
+                    if (time > 0) {
+                        time -= 0.1;
+                        tile.dataset.timer = time;
+                        const fill = tile.querySelector('.timer-fill');
+                        const max = parseFloat(tile.dataset.maxTimer);
+                        fill.style.width = (time / max * 100) + '%';
+                        if (time <= 0) handleDeath(tile);
+                    }
+                }
+            });
+        }, 100);
+
+        function handleDeath(tile) {
+            tile.dataset.state = 'dead';
+            tile.querySelector('.emoji-slot').innerText = '🥀';
+            tile.querySelector('.timer-bar').style.display = 'none';
+            tile.querySelector('.effort-indicator').innerText = 'WITHERED';
+            tile.classList.add('dead');
+            
+            globalTime = Math.max(0, globalTime - 10);
+            playEffect(tile, '💀');
+            updateStats();
+        }
+
+        function updateStats() {
+            pointsEl.innerText = points;
+            timerEl.innerText = Math.max(0, globalTime).toFixed(1);
+            if (globalTime < 10) timerEl.classList.add('timer-critical');
+            else timerEl.classList.remove('timer-critical');
+            
+            const levelIdx = Math.min(Math.floor(points / 50), levels.length - 1);
+            zenLevelEl.innerText = levels[levelIdx];
+        }
+
+        function triggerGameOver() {
+            isGameOver = true;
+            globalTime = 0;
+            document.getElementById('final-points').innerText = points;
+            gameOverEl.style.display = 'flex';
+        }
+
+        function resetTile(tile) {
+            tile.querySelector('.emoji-slot').innerText = '';
+            tile.querySelector('.effort-indicator').innerText = '';
+            tile.dataset.state = 'empty';
+            tile.dataset.timer = '0';
+            tile.dataset.timerType = '';
+            tile.dataset.isDelayed = 'false';
+            tile.classList.remove('planted', 'dead');
+            tile.style.fontSize = '1.5rem';
+            tile.querySelector('.timer-bar').style.display = 'none';
+        }
+
+        function playEffect(tile, emoji) {
+            const effect = document.createElement('div');
+            effect.innerText = emoji;
+            effect.style.position = 'absolute';
+            effect.style.pointerEvents = 'none';
+            effect.style.fontSize = '1.2rem';
+            effect.style.animation = 'fadeOutUp 1.2s ease-out forwards';
+            tile.appendChild(effect);
+            setTimeout(() => effect.remove(), 1200);
+        }
+
+        function clearGarden() {
+            document.querySelectorAll('.tile').forEach(tile => {
+                if (tile.dataset.state === 'dead') resetTile(tile);
+            });
+        }
+    </script>
+</body>
+</html>
