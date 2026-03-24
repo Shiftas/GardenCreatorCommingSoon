@@ -35,9 +35,9 @@
             height: 100vh;
             overflow: hidden;
             display: flex;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(45, 90, 39, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(143, 185, 36, 0.1) 0%, transparent 40%);
+            background-image:
+                    radial-gradient(circle at 10% 20%, rgba(45, 90, 39, 0.15) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(143, 185, 36, 0.1) 0%, transparent 40%);
         }
 
         .main-layout {
@@ -228,8 +228,8 @@
             font-size: 1.1rem;
         }
 
-        .stat-value.timer { 
-            color: var(--harvest); 
+        .stat-value.timer {
+            color: var(--harvest);
             font-family: monospace;
             font-size: 1.3rem;
         }
@@ -281,338 +281,338 @@
     </style>
 </head>
 <body>
-    <div class="main-layout">
-        <aside class="sidebar">
-            <h1>Garden Creator</h1>
-            <p>Garden Creator is an immersive VR design tool that turns "What if?" into "Right here." 
-                Walk through your designs, experiment with endless layouts, and visualize your perfect outdoor escape before you ever pick up a shovel.</p>
-            <p>Coming soon to Meta Quest. Until then, have a go at our mini-game!</p>
-            <footer>
-                <small>&copy; 2026 Garden Creator. All rights reserved.</small>
-            </footer>
-        </aside>
+<div class="main-layout">
+    <aside class="sidebar">
+        <h1>Garden Creator</h1>
+        <p>Garden Creator is an immersive VR design tool that turns "What if?" into "Right here."
+            Walk through your designs, experiment with endless layouts, and visualize your perfect outdoor escape before you ever pick up a shovel.</p>
+        <p>Coming soon to Meta Quest. Until then, have a go at our mini-game!</p>
+        <footer>
+            <small>&copy; 2026 Garden Creator. All rights reserved.</small>
+        </footer>
+    </aside>
 
-        <section class="game-section">
-            <div class="garden-container">
-                <!-- Start Screen -->
-                <div id="start-screen" class="overlay">
-                    <h2>Your Zen Space</h2>
-                    <p style="margin-bottom: 2rem;">Cultivate life, maintain harmony, and let time thrive.</p>
-                    <button class="btn" onclick="startGame()" style="padding: 1.2rem 2.5rem; font-size: 1.2rem; background: var(--accent); color: var(--bg);">Begin Journey</button>
-                </div>
+    <section class="game-section">
+        <div class="garden-container">
+            <!-- Start Screen -->
+            <div id="start-screen" class="overlay">
+                <h2>Your Zen Space</h2>
+                <p style="margin-bottom: 2rem;">Cultivate life, maintain harmony, and let time thrive.</p>
+                <button class="btn" onclick="startGame()" style="padding: 1.2rem 2.5rem; font-size: 1.2rem; background: var(--accent); color: var(--bg);">Begin Journey</button>
+            </div>
 
-                <!-- Game Over -->
-                <div id="game-over" class="overlay" style="display: none;">
-                    <h2>Nature Reclaims All</h2>
-                    <p>Time has withered your efforts. The Cycle continues.</p>
-                    <div id="final-stats" style="margin-top: 1rem; color: var(--text-dim);">Points: <span id="final-points">0</span></div>
-                    <button class="btn" onclick="location.reload()" style="margin-top: 2rem; padding: 1rem 2rem; font-size: 1.2rem;">✨ Rebirth</button>
-                </div>
+            <!-- Game Over -->
+            <div id="game-over" class="overlay" style="display: none;">
+                <h2>Nature Reclaims All</h2>
+                <p>Time has withered your efforts. The Cycle continues.</p>
+                <div id="final-stats" style="margin-top: 1rem; color: var(--text-dim);">Points: <span id="final-points">0</span></div>
+                <button class="btn" onclick="location.reload()" style="margin-top: 2rem; padding: 1rem 2rem; font-size: 1.2rem;">✨ Rebirth</button>
+            </div>
 
-                <div class="garden-header">
-                    <div class="stat-group">
-                        <div class="stat-item">Time <span id="global-timer" class="stat-value timer">300.0</span></div>
-                        <div class="stat-item">Points <span id="points-count" class="stat-value">0</span></div>
-                    </div>
-                    <div class="stat-item" style="text-align: right;">Level <span id="zen-level" class="stat-value">Seedsman</span></div>
+            <div class="garden-header">
+                <div class="stat-group">
+                    <div class="stat-item">Time <span id="global-timer" class="stat-value timer">300.0</span></div>
+                    <div class="stat-item">Points <span id="points-count" class="stat-value">0</span></div>
                 </div>
-                
-                <div class="garden-grid" id="garden-grid">
-                    <!-- 49 Tiles -->
+                <div class="stat-item" style="text-align: right;">Level <span id="zen-level" class="stat-value">Seedsman</span></div>
+            </div>
+
+            <div class="garden-grid" id="garden-grid">
+                <!-- 49 Tiles -->
+            </div>
+
+            <div class="game-controls-container">
+                <div class="game-controls">
+                    <button class="btn active" id="tool-seed" onclick="setTool('seed')">🌱 Plant</button>
+                    <button class="btn" id="tool-water" onclick="setTool('water')">💧 Water</button>
+                    <button class="btn" id="tool-fertilize" onclick="setTool('fertilize')">✨ Fertilizer</button>
+                    <button class="btn" id="tool-harvest" onclick="setTool('harvest')">🧺 Harvest</button>
                 </div>
-                
-                <div class="game-controls-container">
-                    <div class="game-controls">
-                        <button class="btn active" id="tool-seed" onclick="setTool('seed')">🌱 Plant</button>
-                        <button class="btn" id="tool-water" onclick="setTool('water')">💧 Water</button>
-                        <button class="btn" id="tool-fertilize" onclick="setTool('fertilize')">✨ Fertilizer</button>
-                        <button class="btn" id="tool-harvest" onclick="setTool('harvest')">🧺 Harvest</button>
-                    </div>
-                    <div class="game-controls-secondary">
-                        <button class="btn" id="tool-clear" onclick="clearGarden()" style="width: 100%; justify-content: center; opacity: 0.7;">🧹 Clear Withered Plants</button>
-                    </div>
+                <div class="game-controls-secondary">
+                    <button class="btn" id="tool-clear" onclick="clearGarden()" style="width: 100%; justify-content: center; opacity: 0.7;">🧹 Clear Withered Plants</button>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 
-    <script>
-        const grid = document.getElementById('garden-grid');
-        const pointsEl = document.getElementById('points-count');
-        const timerEl = document.getElementById('global-timer');
-        const zenLevelEl = document.getElementById('zen-level');
-        const gameOverEl = document.getElementById('game-over');
-        const startScreenEl = document.getElementById('start-screen');
-        
-        let currentTool = 'seed';
-        let points = 0;
-        let globalTime = 300.0;
-        let isStarted = false;
-        let isGameOver = false;
-        
-        const plants = ['🌿', '🌸', '🌵', '🌻', '🍃', '🍀', '🌷', '🍄'];
-        const trees = ['🌳', '🌲', '🌴', '🎋', '🌲'];
-        const levels = ['Seedsman', 'Apprentice', 'Gardener', 'Master', 'Zen Sage', 'Nature Deity'];
+<script>
+    const grid = document.getElementById('garden-grid');
+    const pointsEl = document.getElementById('points-count');
+    const timerEl = document.getElementById('global-timer');
+    const zenLevelEl = document.getElementById('zen-level');
+    const gameOverEl = document.getElementById('game-over');
+    const startScreenEl = document.getElementById('start-screen');
 
-        // Init Grid
-        function initGrid(cols, rows) {
-            grid.innerHTML = '';
-            grid.style.setProperty('--cols', cols);
-            grid.style.setProperty('--rows', rows);
-            
-            for (let i = 0; i < cols * rows; i++) {
-                const tile = document.createElement('div');
-                tile.className = 'tile';
-                tile.dataset.state = 'empty';
-                tile.dataset.timer = '0';
-                tile.dataset.maxTimer = '0';
-                tile.dataset.effortNeeded = '0';
-                tile.dataset.effortDone = '0';
-                tile.dataset.isDelayed = 'false';
-                
-                const bar = document.createElement('div');
-                bar.className = 'timer-bar';
-                const fill = document.createElement('div');
-                fill.className = 'timer-fill';
-                bar.appendChild(fill);
-                tile.appendChild(bar);
+    let currentTool = 'seed';
+    let points = 0;
+    let globalTime = 300.0;
+    let isStarted = false;
+    let isGameOver = false;
 
-                const emoji = document.createElement('div');
-                emoji.className = 'emoji-slot';
-                tile.appendChild(emoji);
+    const plants = ['🌿', '🌸', '🌵', '🌻', '🍃', '🍀', '🌷', '🍄'];
+    const trees = ['🌳', '🌲', '🌴', '🎋', '🌲'];
+    const levels = ['Seedsman', 'Apprentice', 'Gardener', 'Master', 'Zen Sage', 'Nature Deity'];
 
-                const effort = document.createElement('div');
-                effort.className = 'effort-indicator';
-                tile.appendChild(effort);
-                
-                tile.addEventListener('click', () => handleTileClick(tile));
-                grid.appendChild(tile);
-            }
-        }
+    // Init Grid
+    function initGrid(cols, rows) {
+        grid.innerHTML = '';
+        grid.style.setProperty('--cols', cols);
+        grid.style.setProperty('--rows', rows);
 
-        function updateGridSize() {
-            const container = document.querySelector('.garden-container');
-            const availableWidth = container.clientWidth - 80; // approximate padding and safety
-            const availableHeight = window.innerHeight - 350; // approximate header/controls height
-            
-            let cols = Math.floor((availableWidth + 12) / 72);
-            let rows = Math.floor((availableHeight + 12) / 72);
-            
-            // Limit to original 7x7 for desktop view or if lots of space
-            cols = Math.max(3, Math.min(cols, 7));
-            rows = Math.max(3, Math.min(rows, 7));
-            
-            // Re-init only if dimensions changed significantly to avoid resetting mid-game
-            if (grid.dataset.cols != cols || grid.dataset.rows != rows) {
-                grid.dataset.cols = cols;
-                grid.dataset.rows = rows;
-                initGrid(cols, rows);
-            }
-        }
-
-        window.addEventListener('resize', updateGridSize);
-        updateGridSize(); // Initial call
-
-        function setTool(tool) {
-            currentTool = tool;
-            document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tool-${tool}`).classList.add('active');
-        }
-
-        function startGame() {
-            isStarted = true;
-            startScreenEl.style.display = 'none';
-        }
-
-        function handleTileClick(tile) {
-            if (!isStarted || isGameOver || tile.dataset.isDelayed === 'true') return;
-
-            if (currentTool === 'seed' && tile.dataset.state === 'empty') {
-                tile.dataset.state = 'seed';
-                tile.querySelector('.emoji-slot').innerText = '⏺️';
-                tile.classList.add('planted');
-                setupNextStage(tile, 'water');
-                playEffect(tile, '✨');
-            } else if (currentTool === 'water' && tile.dataset.timerType === 'water') {
-                handleInteraction(tile, () => {
-                    if (tile.dataset.state === 'seed') {
-                        tile.dataset.state = 'sprout';
-                        tile.querySelector('.emoji-slot').innerText = '🌱';
-                        setupNextStage(tile, 'water');
-                    } else if (tile.dataset.state === 'sprout') {
-                        tile.dataset.state = 'plant';
-                        tile.querySelector('.emoji-slot').innerText = plants[Math.floor(Math.random() * plants.length)];
-                        setupNextStage(tile, 'fertilize');
-                    }
-                });
-                playEffect(tile, '💧');
-            } else if (currentTool === 'fertilize' && tile.dataset.timerType === 'fertilize') {
-                handleInteraction(tile, () => {
-                    tile.dataset.state = 'tree';
-                    tile.querySelector('.emoji-slot').innerText = trees[Math.floor(Math.random() * trees.length)];
-                    tile.style.fontSize = '2rem';
-                    setupNextStage(tile, 'harvest');
-                    playEffect(tile, '🌟');
-                });
-            } else if (currentTool === 'harvest' && tile.dataset.state === 'tree') {
-                points += 10;
-                globalTime = Math.min(globalTime + 2, 999);
-                resetTile(tile);
-                updateStats();
-                playEffect(tile, '💰');
-            } else if (currentTool === 'clear' && tile.dataset.state === 'dead') {
-                resetTile(tile);
-            }
-        }
-
-        function handleInteraction(tile, onComplete) {
-            let done = parseInt(tile.dataset.effortDone) + 1;
-            let needed = parseInt(tile.dataset.effortNeeded);
-            tile.dataset.effortDone = done;
-            
-            // Interaction Reset: Reset timer on every care action
-            tile.dataset.timer = tile.dataset.maxTimer;
-            
-            if (done >= needed) {
-                onComplete();
-            } else {
-                // Growth delay
-                const delay = Math.floor(Math.random() * 3) + 1; // 1-3s
-                tile.dataset.isDelayed = 'true';
-                tile.querySelector('.timer-bar').style.display = 'none';
-                tile.querySelector('.effort-indicator').innerText = 'GROWING...';
-                tile.querySelector('.effort-indicator').style.color = 'var(--text-dim)';
-                
-                setTimeout(() => {
-                    if (tile.dataset.state !== 'empty' && tile.dataset.state !== 'dead') {
-                        tile.dataset.isDelayed = 'false';
-                        tile.querySelector('.timer-bar').style.display = 'block';
-                        updateEffortDisplay(tile);
-                    }
-                }, delay * 1000);
-            }
-        }
-
-        function setupNextStage(tile, type) {
-            const timeout = Math.floor(Math.random() * 16) + 10; // 10-25s
-            const interactionType = (type === 'harvest') ? 1 : (Math.floor(Math.random() * 3) + 1); // 1-3 interactions
-            
-            tile.dataset.timer = timeout;
-            tile.dataset.maxTimer = timeout;
-            tile.dataset.timerType = type;
-            tile.dataset.effortNeeded = interactionType;
-            tile.dataset.effortDone = 0;
-            
-            const bar = tile.querySelector('.timer-bar');
-            const fill = tile.querySelector('.timer-fill');
-            bar.style.display = 'block';
-            
-            const colors = { water: 'var(--water)', fertilize: 'var(--accent)', harvest: 'var(--harvest)' };
-            fill.style.background = colors[type];
-            fill.style.width = '100%';
-            
-            updateEffortDisplay(tile);
-        }
-
-        function updateEffortDisplay(tile) {
-            const needed = parseInt(tile.dataset.effortNeeded);
-            const done = parseInt(tile.dataset.effortDone);
-            const indicator = tile.querySelector('.effort-indicator');
-            indicator.style.color = 'var(--text-dim)';
-            
-            if (needed > 1 && tile.dataset.state !== 'tree') {
-                const label = (tile.dataset.timerType === 'water') ? '💧' : '✨';
-                indicator.innerText = `${label} ${done}/${needed}`;
-            } else if (tile.dataset.state === 'tree') {
-                indicator.innerText = '🧺 READY';
-                indicator.style.color = 'var(--harvest)';
-            } else {
-                indicator.innerText = '';
-            }
-        }
-
-        // Ticker
-        setInterval(() => {
-            if (!isStarted || isGameOver) return;
-            
-            // Global Clock
-            globalTime -= 0.1;
-            if (globalTime <= 0) triggerGameOver();
-            updateStats();
-
-            // Local Timers
-            document.querySelectorAll('.tile').forEach(tile => {
-                if (tile.dataset.state !== 'empty' && tile.dataset.state !== 'dead' && tile.dataset.isDelayed === 'false') {
-                    let time = parseFloat(tile.dataset.timer);
-                    if (time > 0) {
-                        time -= 0.1;
-                        tile.dataset.timer = time;
-                        const fill = tile.querySelector('.timer-fill');
-                        const max = parseFloat(tile.dataset.maxTimer);
-                        fill.style.width = (time / max * 100) + '%';
-                        if (time <= 0) handleDeath(tile);
-                    }
-                }
-            });
-        }, 100);
-
-        function handleDeath(tile) {
-            tile.dataset.state = 'dead';
-            tile.querySelector('.emoji-slot').innerText = '🥀';
-            tile.querySelector('.timer-bar').style.display = 'none';
-            tile.querySelector('.effort-indicator').innerText = 'WITHERED';
-            tile.classList.add('dead');
-            
-            globalTime = Math.max(0, globalTime - 10);
-            playEffect(tile, '💀');
-            updateStats();
-        }
-
-        function updateStats() {
-            pointsEl.innerText = points;
-            timerEl.innerText = Math.max(0, globalTime).toFixed(1);
-            if (globalTime < 10) timerEl.classList.add('timer-critical');
-            else timerEl.classList.remove('timer-critical');
-            
-            const levelIdx = Math.min(Math.floor(points / 50), levels.length - 1);
-            zenLevelEl.innerText = levels[levelIdx];
-        }
-
-        function triggerGameOver() {
-            isGameOver = true;
-            globalTime = 0;
-            document.getElementById('final-points').innerText = points;
-            gameOverEl.style.display = 'flex';
-        }
-
-        function resetTile(tile) {
-            tile.querySelector('.emoji-slot').innerText = '';
-            tile.querySelector('.effort-indicator').innerText = '';
+        for (let i = 0; i < cols * rows; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
             tile.dataset.state = 'empty';
             tile.dataset.timer = '0';
-            tile.dataset.timerType = '';
+            tile.dataset.maxTimer = '0';
+            tile.dataset.effortNeeded = '0';
+            tile.dataset.effortDone = '0';
             tile.dataset.isDelayed = 'false';
-            tile.classList.remove('planted', 'dead');
-            tile.style.fontSize = '1.5rem';
-            tile.querySelector('.timer-bar').style.display = 'none';
-        }
 
-        function playEffect(tile, emoji) {
-            const effect = document.createElement('div');
-            effect.innerText = emoji;
-            effect.style.position = 'absolute';
-            effect.style.pointerEvents = 'none';
-            effect.style.fontSize = '1.2rem';
-            effect.style.animation = 'fadeOutUp 1.2s ease-out forwards';
-            tile.appendChild(effect);
-            setTimeout(() => effect.remove(), 1200);
-        }
+            const bar = document.createElement('div');
+            bar.className = 'timer-bar';
+            const fill = document.createElement('div');
+            fill.className = 'timer-fill';
+            bar.appendChild(fill);
+            tile.appendChild(bar);
 
-        function clearGarden() {
-            document.querySelectorAll('.tile').forEach(tile => {
-                if (tile.dataset.state === 'dead') resetTile(tile);
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji-slot';
+            tile.appendChild(emoji);
+
+            const effort = document.createElement('div');
+            effort.className = 'effort-indicator';
+            tile.appendChild(effort);
+
+            tile.addEventListener('click', () => handleTileClick(tile));
+            grid.appendChild(tile);
+        }
+    }
+
+    function updateGridSize() {
+        const container = document.querySelector('.garden-container');
+        const availableWidth = container.clientWidth - 80; // approximate padding and safety
+        const availableHeight = window.innerHeight - 350; // approximate header/controls height
+
+        let cols = Math.floor((availableWidth + 12) / 72);
+        let rows = Math.floor((availableHeight + 12) / 72);
+
+        // Limit to original 7x7 for desktop view or if lots of space
+        cols = Math.max(3, Math.min(cols, 7));
+        rows = Math.max(3, Math.min(rows, 7));
+
+        // Re-init only if dimensions changed significantly to avoid resetting mid-game
+        if (grid.dataset.cols != cols || grid.dataset.rows != rows) {
+            grid.dataset.cols = cols;
+            grid.dataset.rows = rows;
+            initGrid(cols, rows);
+        }
+    }
+
+    window.addEventListener('resize', updateGridSize);
+    updateGridSize(); // Initial call
+
+    function setTool(tool) {
+        currentTool = tool;
+        document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tool-${tool}`).classList.add('active');
+    }
+
+    function startGame() {
+        isStarted = true;
+        startScreenEl.style.display = 'none';
+    }
+
+    function handleTileClick(tile) {
+        if (!isStarted || isGameOver || tile.dataset.isDelayed === 'true') return;
+
+        if (currentTool === 'seed' && tile.dataset.state === 'empty') {
+            tile.dataset.state = 'seed';
+            tile.querySelector('.emoji-slot').innerText = '⏺️';
+            tile.classList.add('planted');
+            setupNextStage(tile, 'water');
+            playEffect(tile, '✨');
+        } else if (currentTool === 'water' && tile.dataset.timerType === 'water') {
+            handleInteraction(tile, () => {
+                if (tile.dataset.state === 'seed') {
+                    tile.dataset.state = 'sprout';
+                    tile.querySelector('.emoji-slot').innerText = '🌱';
+                    setupNextStage(tile, 'water');
+                } else if (tile.dataset.state === 'sprout') {
+                    tile.dataset.state = 'plant';
+                    tile.querySelector('.emoji-slot').innerText = plants[Math.floor(Math.random() * plants.length)];
+                    setupNextStage(tile, 'fertilize');
+                }
             });
+            playEffect(tile, '💧');
+        } else if (currentTool === 'fertilize' && tile.dataset.timerType === 'fertilize') {
+            handleInteraction(tile, () => {
+                tile.dataset.state = 'tree';
+                tile.querySelector('.emoji-slot').innerText = trees[Math.floor(Math.random() * trees.length)];
+                tile.style.fontSize = '2rem';
+                setupNextStage(tile, 'harvest');
+                playEffect(tile, '🌟');
+            });
+        } else if (currentTool === 'harvest' && tile.dataset.state === 'tree') {
+            points += 10;
+            globalTime = Math.min(globalTime + 2, 999);
+            resetTile(tile);
+            updateStats();
+            playEffect(tile, '💰');
+        } else if (currentTool === 'clear' && tile.dataset.state === 'dead') {
+            resetTile(tile);
         }
-    </script>
+    }
+
+    function handleInteraction(tile, onComplete) {
+        let done = parseInt(tile.dataset.effortDone) + 1;
+        let needed = parseInt(tile.dataset.effortNeeded);
+        tile.dataset.effortDone = done;
+
+        // Interaction Reset: Reset timer on every care action
+        tile.dataset.timer = tile.dataset.maxTimer;
+
+        if (done >= needed) {
+            onComplete();
+        } else {
+            // Growth delay
+            const delay = Math.floor(Math.random() * 3) + 1; // 1-3s
+            tile.dataset.isDelayed = 'true';
+            tile.querySelector('.timer-bar').style.display = 'none';
+            tile.querySelector('.effort-indicator').innerText = 'GROWING...';
+            tile.querySelector('.effort-indicator').style.color = 'var(--text-dim)';
+
+            setTimeout(() => {
+                if (tile.dataset.state !== 'empty' && tile.dataset.state !== 'dead') {
+                    tile.dataset.isDelayed = 'false';
+                    tile.querySelector('.timer-bar').style.display = 'block';
+                    updateEffortDisplay(tile);
+                }
+            }, delay * 1000);
+        }
+    }
+
+    function setupNextStage(tile, type) {
+        const timeout = Math.floor(Math.random() * 16) + 10; // 10-25s
+        const interactionType = (type === 'harvest') ? 1 : (Math.floor(Math.random() * 3) + 1); // 1-3 interactions
+
+        tile.dataset.timer = timeout;
+        tile.dataset.maxTimer = timeout;
+        tile.dataset.timerType = type;
+        tile.dataset.effortNeeded = interactionType;
+        tile.dataset.effortDone = 0;
+
+        const bar = tile.querySelector('.timer-bar');
+        const fill = tile.querySelector('.timer-fill');
+        bar.style.display = 'block';
+
+        const colors = { water: 'var(--water)', fertilize: 'var(--accent)', harvest: 'var(--harvest)' };
+        fill.style.background = colors[type];
+        fill.style.width = '100%';
+
+        updateEffortDisplay(tile);
+    }
+
+    function updateEffortDisplay(tile) {
+        const needed = parseInt(tile.dataset.effortNeeded);
+        const done = parseInt(tile.dataset.effortDone);
+        const indicator = tile.querySelector('.effort-indicator');
+        indicator.style.color = 'var(--text-dim)';
+
+        if (needed > 1 && tile.dataset.state !== 'tree') {
+            const label = (tile.dataset.timerType === 'water') ? '💧' : '✨';
+            indicator.innerText = `${label} ${done}/${needed}`;
+        } else if (tile.dataset.state === 'tree') {
+            indicator.innerText = '🧺 READY';
+            indicator.style.color = 'var(--harvest)';
+        } else {
+            indicator.innerText = '';
+        }
+    }
+
+    // Ticker
+    setInterval(() => {
+        if (!isStarted || isGameOver) return;
+
+        // Global Clock
+        globalTime -= 0.1;
+        if (globalTime <= 0) triggerGameOver();
+        updateStats();
+
+        // Local Timers
+        document.querySelectorAll('.tile').forEach(tile => {
+            if (tile.dataset.state !== 'empty' && tile.dataset.state !== 'dead' && tile.dataset.isDelayed === 'false') {
+                let time = parseFloat(tile.dataset.timer);
+                if (time > 0) {
+                    time -= 0.1;
+                    tile.dataset.timer = time;
+                    const fill = tile.querySelector('.timer-fill');
+                    const max = parseFloat(tile.dataset.maxTimer);
+                    fill.style.width = (time / max * 100) + '%';
+                    if (time <= 0) handleDeath(tile);
+                }
+            }
+        });
+    }, 100);
+
+    function handleDeath(tile) {
+        tile.dataset.state = 'dead';
+        tile.querySelector('.emoji-slot').innerText = '🥀';
+        tile.querySelector('.timer-bar').style.display = 'none';
+        tile.querySelector('.effort-indicator').innerText = 'WITHERED';
+        tile.classList.add('dead');
+
+        globalTime = Math.max(0, globalTime - 10);
+        playEffect(tile, '💀');
+        updateStats();
+    }
+
+    function updateStats() {
+        pointsEl.innerText = points;
+        timerEl.innerText = Math.max(0, globalTime).toFixed(1);
+        if (globalTime < 10) timerEl.classList.add('timer-critical');
+        else timerEl.classList.remove('timer-critical');
+
+        const levelIdx = Math.min(Math.floor(points / 50), levels.length - 1);
+        zenLevelEl.innerText = levels[levelIdx];
+    }
+
+    function triggerGameOver() {
+        isGameOver = true;
+        globalTime = 0;
+        document.getElementById('final-points').innerText = points;
+        gameOverEl.style.display = 'flex';
+    }
+
+    function resetTile(tile) {
+        tile.querySelector('.emoji-slot').innerText = '';
+        tile.querySelector('.effort-indicator').innerText = '';
+        tile.dataset.state = 'empty';
+        tile.dataset.timer = '0';
+        tile.dataset.timerType = '';
+        tile.dataset.isDelayed = 'false';
+        tile.classList.remove('planted', 'dead');
+        tile.style.fontSize = '1.5rem';
+        tile.querySelector('.timer-bar').style.display = 'none';
+    }
+
+    function playEffect(tile, emoji) {
+        const effect = document.createElement('div');
+        effect.innerText = emoji;
+        effect.style.position = 'absolute';
+        effect.style.pointerEvents = 'none';
+        effect.style.fontSize = '1.2rem';
+        effect.style.animation = 'fadeOutUp 1.2s ease-out forwards';
+        tile.appendChild(effect);
+        setTimeout(() => effect.remove(), 1200);
+    }
+
+    function clearGarden() {
+        document.querySelectorAll('.tile').forEach(tile => {
+            if (tile.dataset.state === 'dead') resetTile(tile);
+        });
+    }
+</script>
 </body>
 </html>
